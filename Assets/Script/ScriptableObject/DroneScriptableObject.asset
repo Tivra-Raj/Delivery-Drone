@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0589dc316286790479de5ca415c8a46e, type: 3}
+  m_Name: DroneScriptableObject
+  m_EditorClassIdentifier: 
+  MinMaxPitch: 30
+  MinMaxRoll: 30
+  YawPower: 4
+  SmoothMove: 2
+  DroneWeight: 0.5
+  DronePrefab: {fileID: 4399093144565581904, guid: fae8df1e604d3d341b25c466fafe4597, type: 3}

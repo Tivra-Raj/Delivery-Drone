@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 11100000}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: cardboardBox_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
