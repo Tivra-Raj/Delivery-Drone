@@ -16,5 +16,6 @@ MonoBehaviour:
   MinMaxRoll: 30
   YawPower: 4
   SmoothMove: 2
+  Speed: 4
   DroneWeight: 0.5
   DronePrefab: {fileID: 4399093144565581904, guid: fae8df1e604d3d341b25c466fafe4597, type: 3}

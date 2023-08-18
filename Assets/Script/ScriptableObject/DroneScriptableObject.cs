@@ -11,6 +11,7 @@ namespace ScriptableObjects
         public float MinMaxRoll = 30f;
         public float YawPower = 4f;
         public float SmoothMove = 2f;
+        public float Speed = 4f;
 
         [Header("Drone Body Properties")]
         public float DroneWeight = 1f;
