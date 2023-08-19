@@ -44,9 +44,9 @@ namespace MVCs
             float roll = -DroneView.Movement.x * DroneModel.MinMaxRoll;
             yaw += DroneView.YawPedals * DroneModel.YawPower;
 
-            finalPitch = Mathf.Lerp(finalPitch, pitch, Time.deltaTime * DroneModel.SmoothMove);
-            finalRoll = Mathf.Lerp(finalRoll, roll, Time.deltaTime * DroneModel.SmoothMove);
-            finalYawPower = Mathf.Lerp(finalYawPower, yaw, Time.deltaTime * DroneModel.SmoothMove);
+            finalPitch = Mathf.Lerp(finalPitch, pitch, Time.fixedDeltaTime * DroneModel.SmoothMove);
+            finalRoll = Mathf.Lerp(finalRoll, roll, Time.fixedDeltaTime * DroneModel.SmoothMove);
+            finalYawPower = Mathf.Lerp(finalYawPower, yaw, Time.fixedDeltaTime * DroneModel.SmoothMove);
 
             Quaternion rotation = Quaternion.Euler(finalPitch, finalYawPower, finalRoll);
             droneRigidBody.MoveRotation(rotation);
