@@ -1,11 +1,12 @@
 ﻿using ScriptableObjects;
+using UnityEngine;
 using Utility;
 
 namespace MVCs
 {
     public class DroneService : MonoGenericSingleton<DroneService>
     {
-        public DroneScriptableObject ConfigDrone;
+        [SerializeField] private DroneScriptableObject ConfigDrone;
 
         public DroneController DroneController { get; private set; }
 

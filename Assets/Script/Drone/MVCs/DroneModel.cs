@@ -11,6 +11,8 @@ namespace MVCs
         public float YawPower;
         public float SmoothMove;
         public float Speed;
+        public float MaxFuel;
+        public float FuelConsumptionRate;
 
         [Header("Drone Body Properties")]
         public float DroneWeight;
@@ -27,6 +29,8 @@ namespace MVCs
             YawPower = droneScriptableObject.YawPower;
             SmoothMove = droneScriptableObject.SmoothMove;
             Speed = droneScriptableObject.Speed;
+            MaxFuel = droneScriptableObject.MaxFuel;
+            FuelConsumptionRate = droneScriptableObject.FuelConsumptionRate;
 
             DroneWeight = droneScriptableObject.DroneWeight;
         }

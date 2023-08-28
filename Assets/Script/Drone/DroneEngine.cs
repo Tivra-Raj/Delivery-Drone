@@ -11,7 +11,7 @@ public class DroneEngine : MonoBehaviour, IEngine
         Vector3 upVector = transform.up;
         upVector.x = 0f;
         upVector.z = 0f;
-        float diff = 1- upVector.magnitude;
+        float diff = 1 - upVector.magnitude;
 
         float finalDiff = Physics.gravity.magnitude * diff;
 

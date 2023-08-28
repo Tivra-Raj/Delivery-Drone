@@ -1,21 +1,12 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using System;
 
-namespace Assets.Script.Events
+namespace Events
 {
-    public class EventController : MonoBehaviour
+    public class EventController
     {
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        public event Action BaseEvent;
+        public void InvokeEvent() => BaseEvent?.Invoke();
+        public void AddListener(Action listener) => BaseEvent += listener;
+        public void RemoveListener(Action listener) => BaseEvent -= listener;
     }
 }
