@@ -1,3 +1,5 @@
+using DeliveryLocation;
+using Package;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +13,7 @@ namespace MVCs
         [SerializeField] private Transform rayPoint;
         [SerializeField] private float rayDistance;
         [SerializeField] private LayerMask packageLayer;
+        [SerializeField] private float baseInterval;
         private GameObject PackageHolder;
         private bool isAttached = false;
         
@@ -51,6 +54,8 @@ namespace MVCs
 
         public Rigidbody GetRigidbody() => droneRigidBody;
 
+        public float GetBaseInterval() => baseInterval;
+
 
         //Getting All these input from New Unity Input System
         private void OnMovement(InputValue value)  // to Move and tilt Drone using W,A,S,D key.
@@ -77,18 +82,33 @@ namespace MVCs
                     isAttached = true;
                     PackageHolder = hit.collider.gameObject;
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = true;
+                    PackageHolder.GetComponent<Collider>().isTrigger = true;
                     PackageHolder.transform.SetParent(attachPoint.transform, true);
+                    DeliveryLocationService.Instance.SpawnNewDeliveryLocation();
+                    PackageService.Instance.PackageMarker.SetActive(false);
+                    
                 }
                 else if (Keyboard.current.eKey.wasPressedThisFrame && isAttached)
                 {
                     isAttached = false;
+                    PackageHolder.GetComponent<PackageView>().PackageController.SubscribeEvents();
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = false;
+                    PackageHolder.GetComponent<Collider>().isTrigger = false;
                     PackageHolder.transform.SetParent(null);
                     PackageHolder = null;
                 }
             }
 
             Debug.DrawRay(rayPoint.position, -transform.up * rayDistance);
+        }
+
+        public void stopCoroutine(Coroutine coroutine)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+                coroutine = null;
+            }
         }
     }
 }

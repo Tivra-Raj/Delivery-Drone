@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Events;
+using UnityEngine;
 
 namespace Package
 {
@@ -9,13 +10,33 @@ namespace Package
         public PackageController(PackageView packageView)
         {
             PackageView = GameObject.Instantiate<PackageView>(packageView);
-
-            packageView.SetPackageController(this);
+            PackageView.SetPackageController(this);
         }
 
-        public void Configure(Vector3 setPosition)
+        public void Configure(Vector3 setPosition, Quaternion setRotation)
         {
             PackageView.transform.position = setPosition;
+            PackageView.transform.rotation = setRotation;
+        }
+
+        public void SubscribeEvents()
+        {
+            EventService.Instance.OnPackageDeliveredEvent.AddListener(OnPackageEnterDeliveryLocation);
+        }
+
+        private void UnSubscribeEvents()
+        {
+            EventService.Instance.OnPackageDeliveredEvent.RemoveListener(OnPackageEnterDeliveryLocation);
+        }
+
+        public void OnPackageEnterDeliveryLocation()
+        {
+            UnSubscribeEvents();   
+            PackageView.gameObject.SetActive(false);
+            PackageService.Instance.ReturnPackageToPool(this);
+            PackageService.Instance.packageCount--;
+            PackageService.Instance.StopCoroutine(PackageService.Instance.SpawnTimer);
+            PackageService.Instance.SpawnTimer = PackageService.Instance.StartCoroutine(PackageService.Instance.SpawnPackageTimer());
         }
     }
 }

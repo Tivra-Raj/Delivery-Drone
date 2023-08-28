@@ -1,21 +1,27 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace Assets.Script.Events
+﻿namespace Events
 {
-    public class EventService : MonoBehaviour
+    public class EventService
     {
-
-        // Use this for initialization
-        void Start()
+        private static EventService instance;
+        public static EventService Instance
         {
-
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new EventService();
+                }
+                return instance;
+            }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        public EventController OnPackagePickedUp { get; private set; }
+        public EventController OnPackageDeliveredEvent { get; private set; }
 
+        public EventService()
+        {
+            OnPackagePickedUp = new EventController();
+            OnPackageDeliveredEvent = new EventController();
         }
     }
 }
