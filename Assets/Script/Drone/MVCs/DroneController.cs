@@ -40,13 +40,16 @@ namespace MVCs
             HandleControls();
         }
 
-
         private void HandleEngines()
         {
             foreach (IEngine engine in DroneView.engines)
             {
                 engine.UpdateEngine(droneRigidBody, DroneView);
+                
+                fuelConsumptionRate = engine.GetVerticalMovement() * DroneModel.FuelConsumptionRate;  
             }
+
+            ReduceFuel(fuelConsumptionRate);
         }
 
         private void HandleControls()
@@ -62,11 +65,39 @@ namespace MVCs
             Quaternion rotation = Quaternion.Euler(finalPitch, finalYawPower, finalRoll);
             droneRigidBody.MoveRotation(rotation);
 
-            fuelConsumptionRate = finalPitch * DroneModel.FuelConsumptionRate;
+            HandleDroneSpeed();
+
+            fuelConsumptionRate = (Mathf.Abs(finalPitch) + Mathf.Abs(finalRoll)) * DroneModel.FuelConsumptionRate;
             ReduceFuel(fuelConsumptionRate);
         }
 
-        public void ReduceFuel(float fuelConsumptionRate)
+        private void HandleDroneSpeed()
+        {
+            Vector3 additionalSpeedForce = Vector3.zero;
+
+            if (DroneView.Movement.y > 0)
+            {
+                additionalSpeedForce = DroneView.transform.forward * DroneModel.Speed;
+            }
+            else if (DroneView.Movement.y < 0)
+            {
+                additionalSpeedForce = -DroneView.transform.forward * DroneModel.Speed;
+            }
+
+            if (DroneView.Movement.x > 0)
+            {
+                additionalSpeedForce = DroneView.transform.right * DroneModel.Speed;
+            }
+            else if (DroneView.Movement.x < 0)
+            {
+                additionalSpeedForce = -DroneView.transform.right * DroneModel.Speed;
+            }
+
+            // Apply the additional force to the rigidbody
+            droneRigidBody.AddForce(additionalSpeedForce, ForceMode.Force);
+        }
+
+        private void ReduceFuel(float fuelConsumptionRate)
         {
             currentFuel -= Time.deltaTime * fuelConsumptionRate/100;
             UIService.Instance.UpdateFuelUI(currentFuel);

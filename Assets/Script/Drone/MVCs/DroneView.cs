@@ -15,8 +15,7 @@ namespace MVCs
         [SerializeField] private LayerMask packageLayer;
         [SerializeField] private float baseInterval;
         private GameObject PackageHolder;
-        private bool isAttached = false;
-        
+        private bool isAttached = false;     
 
         public DroneEngine[] engines;
         
