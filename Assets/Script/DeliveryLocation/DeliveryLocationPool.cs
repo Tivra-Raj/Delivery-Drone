@@ -11,6 +11,7 @@ namespace DeliveryLocation
             this.deliveryLocationPrefab = deliveryLocationPrefab;
 
             DeliveryLocationController deliveryLocationController = GetItem();
+            DeliveryLocationService.Instance.spwanStatus = DeliveryLocationSpwanStatus.Spwaned;
             deliveryLocationController.DeliveryLocationView.gameObject.SetActive(true);
             deliveryLocationController.SubscribeEvents();
             return deliveryLocationController;

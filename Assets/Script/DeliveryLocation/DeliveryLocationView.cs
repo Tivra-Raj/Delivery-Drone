@@ -1,4 +1,5 @@
 ﻿using Events;
+using MVCs;
 using Package;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace DeliveryLocation
 
         private void OnTriggerEnter(Collider collision)
         {
-            if (collision.gameObject.GetComponent<PackageView>() != null)
+            if (collision.gameObject.GetComponent<PackageView>() != null && !DroneService.Instance.DroneController.DroneView.IsAttached)
             {
                 EventService.Instance.OnPackageDeliveredEvent.InvokeEvent();
             }

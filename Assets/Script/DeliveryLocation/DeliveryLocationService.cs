@@ -7,11 +7,17 @@ namespace DeliveryLocation
     {
         [SerializeField] private DeliveryLocationView deliveryLocationPrefab;
         [SerializeField] private Transform[] SpawnPosition;
+        
+        public DeliveryLocationSpwanStatus spwanStatus;
 
         public DeliveryLocationController DeliveryLocationController { get; private set; }
         private DeliveryLocationPool deliveryLocationPool;
 
-        private void Start() => deliveryLocationPool = GetComponent<DeliveryLocationPool>();
+        private void Start()
+        {
+            deliveryLocationPool = GetComponent<DeliveryLocationPool>();
+            spwanStatus = DeliveryLocationSpwanStatus.DeSpwaned;
+        }
 
         public void SpawnNewDeliveryLocation()
         {

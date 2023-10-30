@@ -8,6 +8,7 @@ namespace MVCs
     {
         public DroneView DroneView { get; private set; }
         public DroneModel DroneModel { get; private set; }
+        public float CurrentFuel { get => currentFuel; set => currentFuel = value; }
 
         private Rigidbody droneRigidBody;
         private float finalPitch;
@@ -29,9 +30,9 @@ namespace MVCs
             DroneModel.SetDroneController(this);
             DroneView.SetDroneController(this);
 
-            currentFuel = DroneModel.MaxFuel;
+            CurrentFuel = DroneModel.MaxFuel;
             UIService.Instance.SetFuelIndicator(DroneModel.MaxFuel);
-            UIService.Instance.UpdateFuelUI(currentFuel);
+            UIService.Instance.UpdateFuelUI(CurrentFuel);
         }       
 
         public void HandlePhysics()
@@ -48,7 +49,6 @@ namespace MVCs
                 
                 fuelConsumptionRate = engine.GetVerticalMovement() * DroneModel.FuelConsumptionRate;  
             }
-
             ReduceFuel(fuelConsumptionRate);
         }
 
@@ -99,20 +99,29 @@ namespace MVCs
 
         private void ReduceFuel(float fuelConsumptionRate)
         {
-            currentFuel -= Time.deltaTime * fuelConsumptionRate/100;
-            UIService.Instance.UpdateFuelUI(currentFuel);
+            CurrentFuel -= Time.deltaTime * fuelConsumptionRate/100;
+            UIService.Instance.UpdateFuelUI(CurrentFuel);
 
-            if (currentFuel < 0)
+            if (CurrentFuel <= 0)
             {
                 DroneView.stopCoroutine(droneDeath);
-                droneDeath = DroneView.StartCoroutine(DroneDeath(5));
+                droneDeath = DroneView.StartCoroutine(DroneDeath(2));
             }
         }
 
-        private IEnumerator DroneDeath(float seconds)
+        public void RefillFuel()
+        {
+            currentFuel += Time.deltaTime * 5f;
+
+            if (currentFuel > DroneModel.MaxFuel)
+                currentFuel = DroneModel.MaxFuel;
+
+            UIService.Instance.UpdateFuelUI(currentFuel);
+        }
+
+        public IEnumerator DroneDeath(float seconds)
         {
             DroneView.gameObject.GetComponent<DroneView>().enabled = false;
-            Physics.gravity = new Vector3 (0, -40, 0);
             yield return new WaitForSeconds(seconds);
             UIService.Instance.GameOver();
         }

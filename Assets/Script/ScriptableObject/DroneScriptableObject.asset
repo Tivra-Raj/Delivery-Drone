@@ -16,7 +16,7 @@ MonoBehaviour:
   MinMaxRoll: 30
   YawPower: 4
   SmoothMove: 3
-  Speed: 5
+  Speed: 10
   MaxFuel: 100
   FuelConsumptionRate: 1
   DroneWeight: 0.5
