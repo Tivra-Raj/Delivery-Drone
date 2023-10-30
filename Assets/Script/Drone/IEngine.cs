@@ -3,5 +3,7 @@ using UnityEngine;
 
 public interface IEngine
 {
-    void UpdateEngine(Rigidbody rigidbody, DroneView input);
+    public void UpdateEngine(Rigidbody rigidbody, DroneView input);
+
+    public float GetVerticalMovement();
 }

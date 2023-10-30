@@ -1,4 +1,5 @@
 using Events;
+using MVCs;
 using Package;
 using UI;
 using UnityEngine;
@@ -34,7 +35,9 @@ namespace DeliveryLocation
         public void OnPackageEnterDeliveryLocation()
         {   
             packageDelivered++;
+            DroneService.Instance.GiveAdditionalTimeOnDelivery();
             UIService.Instance.UpdateTotalPackageDeliveredText(packageDelivered);
+            DeliveryLocationService.Instance.spwanStatus = DeliveryLocationSpwanStatus.DeSpwaned;
             DeliveryLocationView.gameObject.SetActive(false);
             DeliveryLocationService.Instance.ReturnDeliveryLocationToPool(this);
             PackageService.Instance.PackageMarker.SetActive(true);

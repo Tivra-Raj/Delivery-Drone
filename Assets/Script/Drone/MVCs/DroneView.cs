@@ -13,10 +13,8 @@ namespace MVCs
         [SerializeField] private Transform rayPoint;
         [SerializeField] private float rayDistance;
         [SerializeField] private LayerMask packageLayer;
-        [SerializeField] private float baseInterval;
         private GameObject PackageHolder;
         private bool isAttached = false;
-        
 
         public DroneEngine[] engines;
         
@@ -24,6 +22,7 @@ namespace MVCs
         public float YawPedals { get; private set; }
         public float Throttle { get; private set; }
         public DroneController DroneController { get; private set; }
+        public bool IsAttached { get => isAttached; set => isAttached = value; }
 
         public void SetDroneController(DroneController droneController) => DroneController = droneController;
         
@@ -54,9 +53,6 @@ namespace MVCs
 
         public Rigidbody GetRigidbody() => droneRigidBody;
 
-        public float GetBaseInterval() => baseInterval;
-
-
         //Getting All these input from New Unity Input System
         private void OnMovement(InputValue value)  // to Move and tilt Drone using W,A,S,D key.
         {
@@ -77,20 +73,25 @@ namespace MVCs
         {
             if (Physics.Raycast(rayPoint.position, -transform.up, out RaycastHit hit, rayDistance, packageLayer))
             {
-                if (Keyboard.current.eKey.wasPressedThisFrame && !isAttached)
+                if (Keyboard.current.eKey.wasPressedThisFrame && !IsAttached)
                 {
-                    isAttached = true;
+                    IsAttached = true;
                     PackageHolder = hit.collider.gameObject;
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = true;
                     PackageHolder.GetComponent<Collider>().isTrigger = true;
                     PackageHolder.transform.SetParent(attachPoint.transform, true);
-                    DeliveryLocationService.Instance.SpawnNewDeliveryLocation();
+
+                    if(DeliveryLocationService.Instance.spwanStatus == DeliveryLocationSpwanStatus.DeSpwaned)
+                    {
+                        DeliveryLocationService.Instance.SpawnNewDeliveryLocation();
+                    }
+                    
                     PackageService.Instance.PackageMarker.SetActive(false);
                     
                 }
-                else if (Keyboard.current.eKey.wasPressedThisFrame && isAttached)
+                else if (Keyboard.current.eKey.wasPressedThisFrame && IsAttached)
                 {
-                    isAttached = false;
+                    IsAttached = false;
                     PackageHolder.GetComponent<PackageView>().PackageController.SubscribeEvents();
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = false;
                     PackageHolder.GetComponent<Collider>().isTrigger = false;
@@ -108,6 +109,14 @@ namespace MVCs
             {
                 StopCoroutine(coroutine);
                 coroutine = null;
+            }
+        }
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (other.CompareTag("GasPoint") && Input.GetKey(KeyCode.E))
+            {
+                DroneController.RefillFuel();
             }
         }
     }

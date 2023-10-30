@@ -8,6 +8,7 @@ namespace MVCs
     {
         public DroneView DroneView { get; private set; }
         public DroneModel DroneModel { get; private set; }
+        public float CurrentFuel { get => currentFuel; set => currentFuel = value; }
 
         private Rigidbody droneRigidBody;
         private float finalPitch;
@@ -29,9 +30,9 @@ namespace MVCs
             DroneModel.SetDroneController(this);
             DroneView.SetDroneController(this);
 
-            currentFuel = DroneModel.MaxFuel;
+            CurrentFuel = DroneModel.MaxFuel;
             UIService.Instance.SetFuelIndicator(DroneModel.MaxFuel);
-            UIService.Instance.UpdateFuelUI(currentFuel);
+            UIService.Instance.UpdateFuelUI(CurrentFuel);
         }       
 
         public void HandlePhysics()
@@ -40,13 +41,15 @@ namespace MVCs
             HandleControls();
         }
 
-
         private void HandleEngines()
         {
             foreach (IEngine engine in DroneView.engines)
             {
                 engine.UpdateEngine(droneRigidBody, DroneView);
+                
+                fuelConsumptionRate = engine.GetVerticalMovement() * DroneModel.FuelConsumptionRate;  
             }
+            ReduceFuel(fuelConsumptionRate);
         }
 
         private void HandleControls()
@@ -62,26 +65,63 @@ namespace MVCs
             Quaternion rotation = Quaternion.Euler(finalPitch, finalYawPower, finalRoll);
             droneRigidBody.MoveRotation(rotation);
 
-            fuelConsumptionRate = finalPitch * DroneModel.FuelConsumptionRate;
+            HandleDroneSpeed();
+
+            fuelConsumptionRate = (Mathf.Abs(finalPitch) + Mathf.Abs(finalRoll)) * DroneModel.FuelConsumptionRate;
             ReduceFuel(fuelConsumptionRate);
         }
 
-        public void ReduceFuel(float fuelConsumptionRate)
+        private void HandleDroneSpeed()
         {
-            currentFuel -= Time.deltaTime * fuelConsumptionRate/100;
-            UIService.Instance.UpdateFuelUI(currentFuel);
+            Vector3 additionalSpeedForce = Vector3.zero;
 
-            if (currentFuel < 0)
+            if (DroneView.Movement.y > 0)
+            {
+                additionalSpeedForce = DroneView.transform.forward * DroneModel.Speed;
+            }
+            else if (DroneView.Movement.y < 0)
+            {
+                additionalSpeedForce = -DroneView.transform.forward * DroneModel.Speed;
+            }
+
+            if (DroneView.Movement.x > 0)
+            {
+                additionalSpeedForce = DroneView.transform.right * DroneModel.Speed;
+            }
+            else if (DroneView.Movement.x < 0)
+            {
+                additionalSpeedForce = -DroneView.transform.right * DroneModel.Speed;
+            }
+
+            // Apply the additional force to the rigidbody
+            droneRigidBody.AddForce(additionalSpeedForce, ForceMode.Force);
+        }
+
+        private void ReduceFuel(float fuelConsumptionRate)
+        {
+            CurrentFuel -= Time.deltaTime * fuelConsumptionRate/100;
+            UIService.Instance.UpdateFuelUI(CurrentFuel);
+
+            if (CurrentFuel <= 0)
             {
                 DroneView.stopCoroutine(droneDeath);
-                droneDeath = DroneView.StartCoroutine(DroneDeath(5));
+                droneDeath = DroneView.StartCoroutine(DroneDeath(2));
             }
         }
 
-        private IEnumerator DroneDeath(float seconds)
+        public void RefillFuel()
+        {
+            currentFuel += Time.deltaTime * 5f;
+
+            if (currentFuel > DroneModel.MaxFuel)
+                currentFuel = DroneModel.MaxFuel;
+
+            UIService.Instance.UpdateFuelUI(currentFuel);
+        }
+
+        public IEnumerator DroneDeath(float seconds)
         {
             DroneView.gameObject.GetComponent<DroneView>().enabled = false;
-            Physics.gravity = new Vector3 (0, -40, 0);
             yield return new WaitForSeconds(seconds);
             UIService.Instance.GameOver();
         }
