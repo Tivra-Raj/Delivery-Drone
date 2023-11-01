@@ -1,5 +1,6 @@
 using DeliveryLocation;
 using Package;
+using Sound;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -75,6 +76,7 @@ namespace MVCs
             {
                 if (Keyboard.current.eKey.wasPressedThisFrame && !IsAttached)
                 {
+                    SoundService.Instance.PlaySoundEffects(SoundType.PackageAttaching);
                     IsAttached = true;
                     PackageHolder = hit.collider.gameObject;
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = true;
@@ -91,6 +93,7 @@ namespace MVCs
                 }
                 else if (Keyboard.current.eKey.wasPressedThisFrame && IsAttached)
                 {
+                    SoundService.Instance.PlaySoundEffects(SoundType.PackageAttaching);
                     IsAttached = false;
                     PackageHolder.GetComponent<PackageView>().PackageController.SubscribeEvents();
                     PackageHolder.GetComponent<Rigidbody>().isKinematic = false;

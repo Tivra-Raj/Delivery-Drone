@@ -1,4 +1,5 @@
 ﻿using Events;
+using Sound;
 using UnityEngine;
 
 namespace Package
@@ -31,7 +32,8 @@ namespace Package
 
         public void OnPackageEnterDeliveryLocation()
         {
-            UnSubscribeEvents();   
+            UnSubscribeEvents();
+            SoundService.Instance.PlaySoundEffects(SoundType.DeliveryDone);
             PackageView.gameObject.SetActive(false);
             PackageService.Instance.ReturnPackageToPool(this);
             PackageService.Instance.packageCount--;

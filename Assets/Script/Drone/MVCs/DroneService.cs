@@ -1,5 +1,6 @@
 ﻿using FloatingText;
 using ScriptableObjects;
+using Sound;
 using System;
 using System.Collections;
 using UI;
@@ -27,6 +28,23 @@ namespace MVCs
             countDown = StartCoroutine(DeliveryCountDown());
         }
 
+        private void Update()
+        {
+            PlayCountDownTimeSound();
+        }
+
+        private void PlayCountDownTimeSound()
+        {
+            if (currentDeliveryTime <= 10 && currentDeliveryTime >= 0)
+            {
+                SoundService.Instance.PlaySoundEffect(SoundType.Timer);
+            }
+            else
+            {
+                SoundService.Instance.StopSoundEffects(SoundType.Timer);
+            }
+        }
+
         private DroneController CreateNewDrone()
         {
             DroneScriptableObject droneScriptableObject = ConfigDrone;
@@ -47,7 +65,10 @@ namespace MVCs
 
                 currentDeliveryTime--;
                 yield return new WaitForSeconds(1);
+                
             }
+            
+
             countDown = StartCoroutine(DroneController.DroneDeath(2f));
         }
 
