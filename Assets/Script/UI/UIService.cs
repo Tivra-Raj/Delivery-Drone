@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Sound;
+using TMPro;
 using Tutorial;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -57,6 +58,7 @@ namespace UI
         {
             if (Input.GetKeyDown(KeyCode.Escape) && !GameIsOver)
             {
+                //SoundService.Instance.PlaySoundEffect(SoundType.Button);
                 if (GameIsPaused)
                 {
                     Resume();
@@ -126,6 +128,7 @@ namespace UI
 
         private void Pause()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             gameMenuText.SetText("GAME PAUSED");
             SetGameMenuUIActive(true);
             playAgainButton.gameObject.SetActive(false);
@@ -135,6 +138,7 @@ namespace UI
 
         public void Resume()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             gameMenuText.SetText("GAME OVER");
             SetGameMenuUIActive(false);
             playAgainButton.gameObject.SetActive(true);
@@ -144,6 +148,7 @@ namespace UI
 
         public void OnPlayAgainClicked()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             Time.timeScale = 1f;
             GameIsOver = false;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -151,10 +156,15 @@ namespace UI
 
         public void MainMenu()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             Time.timeScale = 1f;
             SceneManager.LoadScene(0);
         }
 
-        public void OnQuitClicked() => Application.Quit();
+        public void OnQuitClicked()
+        {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
+            Application.Quit();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Sound;
+using System.Collections;
 using UI;
 using UnityEngine;
 
@@ -43,6 +44,7 @@ namespace MVCs
 
         private void HandleEngines()
         {
+            SoundService.Instance.PlayMusic(SoundType.DroneFlying, true);
             foreach (IEngine engine in DroneView.engines)
             {
                 engine.UpdateEngine(droneRigidBody, DroneView);
@@ -104,8 +106,23 @@ namespace MVCs
 
             if (CurrentFuel <= 0)
             {
+                currentFuel = 0;
                 DroneView.stopCoroutine(droneDeath);
                 droneDeath = DroneView.StartCoroutine(DroneDeath(2));
+            }
+
+            PlayLowFuelSound();
+        }
+
+        public void PlayLowFuelSound()
+        {
+            if (currentFuel < 10f && currentFuel >= 0f)
+            {
+                SoundService.Instance.PlayMusicEffect(SoundType.LowFuel, true);
+            }
+            else
+            {
+                SoundService.Instance.StopMusicEffects(SoundType.LowFuel);   
             }
         }
 

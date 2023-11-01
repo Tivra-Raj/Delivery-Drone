@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sound;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -23,16 +24,19 @@ namespace UI
 
         private void Play()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             SceneManager.LoadScene(1);
         }
 
         public void LoadCreditScene()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             SceneManager.LoadScene(creditSceneIndex);
         }
 
         private void Quit()
         {
+            SoundService.Instance.PlaySoundEffects(SoundType.Button);
             Application.Quit();
         }
     }
