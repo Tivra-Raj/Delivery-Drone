@@ -12,11 +12,11 @@
 
 # My Work
 
--  A simple Simulation-tasked genre-based game.
-− Worked on simple flight system and Hovering of Drone and used unity new Input system.
-− Used MVCs for Interactable object (like Drone, Packages) for easy management and spawning, as well as used Scriptable Objects for maintain data.
-− Used Observer Pattern for Triggering Event (like picking up package and delivering at location).
-− Used Object Pooling to reusing the spawning of package and delivery location.
+- A simple Simulation-tasked genre-based game.
+- Worked on simple flight system and Hovering of Drone and used unity new Input system.
+- Used MVCs for Interactable object (like Drone, Packages) for easy management and spawning, as well as used Scriptable Objects for maintain data.
+- Used Observer Pattern for Triggering Event (like picking up package and delivering at location).
+- Used Object Pooling to reusing the spawning of package and delivery location.
 
 # Video and Play
 
